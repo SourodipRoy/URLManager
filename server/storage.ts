@@ -4,6 +4,7 @@ export interface IStorage {
   resolveAndStoreUrl(originalUrl: string, resolvedUrl: string): Promise<ResolvedUrl>;
   getAllResolvedUrls(): Promise<ResolvedUrl[]>;
   clearAllResolvedUrls(): Promise<void>;
+  checkUrlExists(resolvedUrl: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -34,6 +35,11 @@ export class MemStorage implements IStorage {
 
   async clearAllResolvedUrls(): Promise<void> {
     this.resolvedUrls.clear();
+  }
+
+  async checkUrlExists(resolvedUrl: string): Promise<boolean> {
+    const urlsArray = Array.from(this.resolvedUrls.values());
+    return urlsArray.some(url => url.resolvedUrl === resolvedUrl);
   }
 }
 

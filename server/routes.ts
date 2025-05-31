@@ -90,6 +90,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { url } = urlResolveSchema.parse(req.body);
       
       const resolvedUrl = await followRedirects(url);
+      
+      // Check if URL already exists to prevent duplicates
+      const exists = await storage.checkUrlExists(resolvedUrl);
+      if (exists) {
+        res.status(409).json({ 
+          message: "URL already exists in the list",
+          resolvedUrl 
+        });
+        return;
+      }
+      
       const result = await storage.resolveAndStoreUrl(url, resolvedUrl);
       
       res.json(result);
@@ -127,6 +138,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       res.status(500).json({ 
         message: error instanceof Error ? error.message : "Failed to clear resolved URLs"
+      });
+    }
+  });
+
+  // Analyze text file content
+  app.post("/api/analyze-file", async (req, res) => {
+    try {
+      const { content } = req.body;
+      if (!content || typeof content !== 'string') {
+        return res.status(400).json({ message: "File content is required" });
+      }
+
+      const lines = content.split('\n').map((line: string) => line.trim()).filter((line: string) => line.length > 0);
+      const uniqueLines = Array.from(new Set(lines));
+      
+      res.json({
+        totalLines: lines.length,
+        uniqueLines: uniqueLines.length,
+        duplicateLines: lines.length - uniqueLines.length,
+        urls: uniqueLines
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to analyze file"
+      });
+    }
+  });
+
+  // Merge multiple file contents
+  app.post("/api/merge-files", async (req, res) => {
+    try {
+      const { files } = req.body;
+      if (!files || !Array.isArray(files)) {
+        return res.status(400).json({ message: "Files array is required" });
+      }
+
+      const allLines: string[] = [];
+      for (const fileContent of files) {
+        const lines = fileContent.split('\n').map((line: string) => line.trim()).filter((line: string) => line.length > 0);
+        allLines.push(...lines);
+      }
+
+      const uniqueLines = Array.from(new Set(allLines));
+      
+      res.json({
+        totalLines: allLines.length,
+        uniqueLines: uniqueLines.length,
+        duplicateLines: allLines.length - uniqueLines.length,
+        urls: uniqueLines
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to merge files"
       });
     }
   });

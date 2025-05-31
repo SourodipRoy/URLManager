@@ -23,3 +23,20 @@ export const urlResolveSchema = z.object({
 });
 
 export type UrlResolveRequest = z.infer<typeof urlResolveSchema>;
+
+// File analysis schemas
+export const fileAnalysisSchema = z.object({
+  totalLines: z.number(),
+  uniqueLines: z.number(),
+  duplicateLines: z.number(),
+  urls: z.array(z.string()),
+});
+
+export type FileAnalysis = z.infer<typeof fileAnalysisSchema>;
+
+export const fileMergeSchema = z.object({
+  files: z.array(z.string()),
+  filename: z.string().optional(),
+});
+
+export type FileMergeRequest = z.infer<typeof fileMergeSchema>;
