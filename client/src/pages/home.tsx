@@ -36,11 +36,20 @@ export default function Home() {
       });
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to resolve URL. Please check the URL and try again.",
-        variant: "destructive",
-      });
+      // Handle duplicate URL case
+      if (error.status === 409) {
+        toast({
+          title: "URL already exists",
+          description: "This URL has already been resolved and is in your list.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to resolve URL. Please check the URL and try again.",
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -154,23 +163,13 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          <div className="flex items-center space-x-3">
-            <div className="bg-primary rounded-lg p-2">
-              <Link className="text-primary-foreground text-xl" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">URL Resolver</h1>
-              <p className="text-slate-600 text-sm">Unshorten and resolve redirected links instantly</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">URL Resolver</h1>
+        <p className="text-slate-600 mt-2">Unshorten and resolve redirected links instantly</p>
+      </div>
 
-      <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <div className="space-y-8">
         {/* Link Input Section */}
         <Card>
           <CardHeader>
@@ -356,7 +355,7 @@ export default function Home() {
             </div>
           </CardContent>
         </Card>
-      </main>
+      </div>
     </div>
   );
 }
