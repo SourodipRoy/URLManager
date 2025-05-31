@@ -8,13 +8,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Upload, Download, FileText, Search, AlertTriangle } from "lucide-react";
 import type { FileAnalysis } from "@shared/schema";
 
 export default function DuplicateChecker() {
   const [file, setFile] = useState<File | null>(null);
-  const [filename, setFilename] = useState("cleaned-links.txt");
-  const [preserveOrder, setPreserveOrder] = useState(true);
+  const [filename, setFilename] = useLocalStorage("duplicateChecker_filename", "cleaned-links.txt");
+  const [preserveOrder, setPreserveOrder] = useLocalStorage("duplicateChecker_preserveOrder", true);
   const [analysis, setAnalysis] = useState<FileAnalysis | null>(null);
   const { toast } = useToast();
 

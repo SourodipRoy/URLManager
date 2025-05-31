@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/layout";
 import Home from "@/pages/home";
+import TextToFile from "@/pages/text-to-file";
 import FileMerger from "@/pages/file-merger";
 import DuplicateChecker from "@/pages/duplicate-checker";
 import NotFound from "@/pages/not-found";
@@ -14,6 +15,7 @@ function Router() {
     <Layout>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/text-to-file" component={TextToFile} />
         <Route path="/file-merger" component={FileMerger} />
         <Route path="/duplicate-checker" component={DuplicateChecker} />
         <Route component={NotFound} />

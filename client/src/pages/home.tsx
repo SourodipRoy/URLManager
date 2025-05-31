@@ -43,6 +43,7 @@ export default function Home() {
           description: "This URL has already been resolved and is in your list.",
           variant: "destructive",
         });
+        setUrlInput(""); // Clear input field automatically
       } else {
         toast({
           title: "Error",
@@ -136,13 +137,16 @@ export default function Home() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    // Clear the list after download
+    // Clear the list and localStorage immediately after download
     clearUrlsMutation.mutate();
     setFilename("");
+    
+    // Clear localStorage as well
+    localStorage.removeItem('resolvedUrls');
 
     toast({
       title: "Success",
-      description: `Downloaded ${resolvedUrls.length} URLs`,
+      description: `Downloaded ${resolvedUrls.length} URLs. List cleared automatically.`,
     });
   };
 

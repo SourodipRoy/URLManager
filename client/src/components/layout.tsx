@@ -24,6 +24,12 @@ const navigation = [
     description: "Resolve shortened and redirected URLs"
   },
   {
+    name: "Text to File",
+    href: "/text-to-file",
+    icon: FileText,
+    description: "Convert text input to clean .txt files"
+  },
+  {
     name: "File Merger",
     href: "/file-merger",
     icon: Merge,

@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Upload, Download, FileText, Merge, X } from "lucide-react";
 import type { FileAnalysis } from "@shared/schema";
 
 export default function FileMerger() {
   const [files, setFiles] = useState<File[]>([]);
-  const [filename, setFilename] = useState("merged-links.txt");
+  const [filename, setFilename] = useLocalStorage("fileMerger_filename", "merged-links.txt");
   const [mergeResult, setMergeResult] = useState<FileAnalysis | null>(null);
   const { toast } = useToast();
 
